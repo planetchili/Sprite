@@ -62,16 +62,18 @@ Surface::~Surface()
 
 Surface& Surface::operator=( const Surface& rhs )
 {
-	width = rhs.width;
-	height = rhs.height;
+	if (&rhs != this) {
+		width = rhs.width;
+		height = rhs.height;
 
-	delete [] pPixels;
-	pPixels = new Color[width*height];
+		delete[] pPixels;
+		pPixels = new Color[width*height];
 
-	const int nPixels = width * height;
-	for( int i = 0; i < nPixels; i++ )
-	{
-		pPixels[i] = rhs.pPixels[i];
+		const int nPixels = width * height;
+		for (int i = 0; i < nPixels; i++)
+		{
+			pPixels[i] = rhs.pPixels[i];
+		}
 	}
 	return *this;
 }
