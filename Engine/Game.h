@@ -24,6 +24,11 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Surface.h"
+#include "Animation.h"
+#include "FrameTimer.h"
+#include "Character.h"
+#include "Font.h"
+#include "Sound.h"
 
 class Game
 {

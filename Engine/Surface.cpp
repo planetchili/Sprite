@@ -24,6 +24,7 @@ Surface::Surface( const std::string& filename )
 	pPixels = new Color[width*height];
 
 	file.seekg( bmFileHeader.bfOffBits );
+	// padding is for the case of of 24 bit depth only
 	const int padding = (4 - (width * 3) % 4) % 4;
 
 	if(reverseRowOrder)
@@ -119,4 +120,9 @@ int Surface::GetWidth() const
 int Surface::GetHeight() const
 {
 	return height;
+}
+
+RectI Surface::GetRect() const
+{
+	return{ 0,width,0,height };
 }

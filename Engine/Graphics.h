@@ -25,6 +25,7 @@
 #include "ChiliException.h"
 #include "Colors.h"
 #include "Surface.h"
+#include "RectI.h"
 
 class Graphics
 {
@@ -58,7 +59,16 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
-	void DrawSprite( int x,int y,const Surface& s );
+	void DrawSpriteNonChroma( int x,int y,const Surface& s );
+	void DrawSpriteNonChroma( int x,int y,const RectI& srcRect,const Surface& s );
+	void DrawSpriteNonChroma( int x,int y,RectI srcRect,const RectI& clip,const Surface& s );
+	void DrawSprite( int x,int y,const Surface& s,Color chroma = Colors::Magenta );
+	void DrawSprite( int x,int y,const RectI& srcRect,const Surface& s,Color chroma = Colors::Magenta );
+	void DrawSprite( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,Color chroma = Colors::Magenta );
+	// this version of drawsprite substitutes all drawn pixel colors with the supplied color
+	void DrawSpriteSubstitute( int x,int y,Color substitute,const Surface& s,Color chroma = Colors::Magenta );
+	void DrawSpriteSubstitute( int x,int y,Color substitute,const RectI& srcRect,const Surface& s,Color chroma = Colors::Magenta );
+	void DrawSpriteSubstitute( int x,int y,Color substitute,RectI srcRect,const RectI& clip,const Surface& s,Color chroma = Colors::Magenta );
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
@@ -77,4 +87,5 @@ private:
 public:
 	static constexpr int ScreenWidth = 800;
 	static constexpr int ScreenHeight = 600;
+	static RectI GetScreenRect();
 };
