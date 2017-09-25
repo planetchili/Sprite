@@ -14,25 +14,40 @@ Surface::Surface( const std::string& filename )
 	BITMAPINFOHEADER bmInfoHeader;
 	file.read( reinterpret_cast<char*>(&bmInfoHeader),sizeof( bmInfoHeader ) );
 
-	assert( bmInfoHeader.biBitCount == 24 );
+	assert( bmInfoHeader.biBitCount == 24 || bmInfoHeader.biBitCount == 32 );
 	assert( bmInfoHeader.biCompression == BI_RGB );
 
+	bool reverseRowOrder = bmInfoHeader.biHeight < 0;
 	width = bmInfoHeader.biWidth;
-	height = bmInfoHeader.biHeight;
+	height = abs(bmInfoHeader.biHeight);
 
 	pPixels = new Color[width*height];
 
 	file.seekg( bmFileHeader.bfOffBits );
 	const int padding = (4 - (width * 3) % 4) % 4;
 
-	for( int y = height - 1; y >= 0; y-- )
-	{
-		for( int x = 0; x < width; x++ )
+	if(reverseRowOrder)
+		for( int y = 0; y < height; y++ )
 		{
-			PutPixel( x,y,Color( file.get(),file.get(),file.get() ) );
+			for( int x = 0; x < width; x++ )
+			{
+				PutPixel( x,y,Color( file.get(),file.get(),file.get() ) );
+				//throw away alpha value for 32-bit image
+				if (bmInfoHeader.biBitCount == 32) file.get();
+			}
+			file.seekg( padding,std::ios::cur );
 		}
-		file.seekg( padding,std::ios::cur );
-	}
+	else
+		for (int y = height - 1; y >= 0; y--)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				PutPixel(x, y, Color(file.get(), file.get(), file.get()));
+				//throw away alpha value for 32-bit image
+				if (bmInfoHeader.biBitCount == 32) file.get();
+			}
+			file.seekg(padding, std::ios::cur);
+		}
 }
 
 Surface::Surface( int width,int height )
