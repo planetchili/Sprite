@@ -17,29 +17,9 @@ Surface::Surface( const std::string& filename )
 	assert( bmInfoHeader.biBitCount == 24 || bmInfoHeader.biBitCount == 32 );
 	assert( bmInfoHeader.biCompression == BI_RGB );
 
-	const bool is32b = bmInfoHeader.biBitCount == 32;
-
+	bool reverseRowOrder = bmInfoHeader.biHeight < 0;
 	width = bmInfoHeader.biWidth;
-
-	// test for reverse row order and control
-	// y loop accordingly
-	int yStart;
-	int yEnd;
-	int dy;
-	if( bmInfoHeader.biHeight < 0 )
-	{
-		height = -bmInfoHeader.biHeight;
-		yStart = 0;
-		yEnd = height;
-		dy = 1;
-	}
-	else
-	{
-		height = bmInfoHeader.biHeight;
-		yStart = height - 1;
-		yEnd = -1;
-		dy = -1;
-	}
+	height = abs(bmInfoHeader.biHeight);
 
 	pPixels = new Color[width*height];
 
@@ -47,21 +27,28 @@ Surface::Surface( const std::string& filename )
 	// padding is for the case of of 24 bit depth only
 	const int padding = (4 - (width * 3) % 4) % 4;
 
-	for( int y = yStart; y != yEnd; y += dy )
-	{
-		for( int x = 0; x < width; x++ )
+	if(reverseRowOrder)
+		for( int y = 0; y < height; y++ )
 		{
-			PutPixel( x,y,Color( file.get(),file.get(),file.get() ) );
-			if( is32b )
+			for( int x = 0; x < width; x++ )
 			{
-				file.seekg( 1,std::ios::cur );
+				PutPixel( x,y,Color( file.get(),file.get(),file.get() ) );
+				//throw away alpha value for 32-bit image
+				if (bmInfoHeader.biBitCount == 32) file.get();
 			}
-		}
-		if( !is32b )
-		{
 			file.seekg( padding,std::ios::cur );
 		}
-	}
+	else
+		for (int y = height - 1; y >= 0; y--)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				PutPixel(x, y, Color(file.get(), file.get(), file.get()));
+				//throw away alpha value for 32-bit image
+				if (bmInfoHeader.biBitCount == 32) file.get();
+			}
+			file.seekg(padding, std::ios::cur);
+		}
 }
 
 Surface::Surface( int width,int height )
@@ -91,16 +78,18 @@ Surface::~Surface()
 
 Surface& Surface::operator=( const Surface& rhs )
 {
-	width = rhs.width;
-	height = rhs.height;
+	if (&rhs != this) {
+		width = rhs.width;
+		height = rhs.height;
 
-	delete [] pPixels;
-	pPixels = new Color[width*height];
+		delete[] pPixels;
+		pPixels = new Color[width*height];
 
-	const int nPixels = width * height;
-	for( int i = 0; i < nPixels; i++ )
-	{
-		pPixels[i] = rhs.pPixels[i];
+		const int nPixels = width * height;
+		for (int i = 0; i < nPixels; i++)
+		{
+			pPixels[i] = rhs.pPixels[i];
+		}
 	}
 	return *this;
 }
