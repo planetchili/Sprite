@@ -21,7 +21,7 @@ void Animation::Draw( const Vei2& pos,Graphics& gfx ) const
 
 void Animation::Draw( const Vei2& pos,Graphics& gfx,const RectI& clip ) const
 {
-	gfx.DrawSprite( pos.x,pos.y,frames[iCurFrame],clip,sprite,SpriteEffect::Copy{} );
+	gfx.DrawSprite( pos.x,pos.y,frames[iCurFrame],clip,sprite,SpriteEffect::Ghost{ chroma } );
 }
 
 void Animation::DrawColor( const Vei2& pos,Graphics& gfx,Color c ) const
