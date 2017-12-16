@@ -25,10 +25,7 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
-{
-	Vei2 v;
-	auto v2 = v.GetNormalized();
-}
+{}
 
 void Game::Go()
 {
