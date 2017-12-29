@@ -1,0 +1,11 @@
+original - release
+Mean: 6.62593ms
+Min: 6.46981ms
+Max: 7.85599ms
+
+original - debug
+Mean: 1242.69ms
+Min: 1222.09ms
+Max: 1304.72ms
+
+

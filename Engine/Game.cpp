@@ -20,12 +20,23 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include <random>
+#include "SpriteEffect.h"
 
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd )
-{}
+{
+	std::mt19937 rng( 69 );
+	std::uniform_int_distribution<int> xd( 0,Graphics::ScreenWidth - s.GetWidth() - 1 );
+	std::uniform_int_distribution<int> yd( 0,Graphics::ScreenHeight - s.GetHeight() - 1 );
+
+	for( int i = 0; i < 50; i++ )
+	{
+		positions.push_back( { xd( rng ),yd( rng ) } );
+	}
+}
 
 void Game::Go()
 {
@@ -37,42 +48,19 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	// process key messages while any remain
-	while( !wnd.kbd.KeyIsEmpty() )
-	{
-		const auto e = wnd.kbd.ReadKey();
-		// only interested in space bar presses
-		if( e.IsPress() && e.GetCode() == VK_SPACE )
-		{
-			link.ActivateEffect();
-			hit.Play();
-		}
-	}
-	// process arrow keys state
-	Vec2 dir = { 0.0f,0.0f };
-	if( wnd.kbd.KeyIsPressed( VK_UP ) )
-	{
-		dir.y -= 1.0f;
-	}
-	if( wnd.kbd.KeyIsPressed( VK_DOWN ) )
-	{
-		dir.y += 1.0f;
-	}
-	if( wnd.kbd.KeyIsPressed( VK_LEFT ) )
-	{
-		dir.x -= 1.0f;
-	}
-	if( wnd.kbd.KeyIsPressed( VK_RIGHT ) )
-	{
-		dir.x += 1.0f;
-	}
-	link.SetDirection( dir );
-	// update character
-	link.Update( ft.Mark() );
 }
 
 void Game::ComposeFrame()
 {
-	font.DrawText( "Becky.\nLemme smash.",wnd.mouse.GetPos() - Vei2{ 50,150 },Colors::White,gfx );
-	link.Draw( gfx );
+	bencher.Start();
+
+	for( const auto& pos : positions )
+	{
+		gfx.DrawSprite( pos.x,pos.y,s,SpriteEffect::Copy{} );
+	}
+
+	if( bencher.End() )
+	{
+		OutputDebugString( (std::wstring( bencher ) + L"\n").c_str() );
+	}
 }
