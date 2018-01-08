@@ -20,6 +20,8 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 	RectI GetRect() const;
+	void Fill( Color c );
+	const Color* Data() const;
 private:
 	Color* pPixels = nullptr;
 	int width = 0;

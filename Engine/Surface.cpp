@@ -2,6 +2,7 @@
 #include "ChiliWin.h"
 #include <cassert>
 #include <fstream>
+#include <algorithm>
 
 Surface::Surface( const std::string& filename )
 {
@@ -165,4 +166,14 @@ int Surface::GetHeight() const
 RectI Surface::GetRect() const
 {
 	return{ 0,width,0,height };
+}
+
+void Surface::Fill( Color c )
+{
+	std::fill( pPixels,pPixels + height * width,c );
+}
+
+const Color* Surface::Data() const
+{
+	return pPixels;
 }

@@ -8,4 +8,13 @@ Mean: 1242.69ms
 Min: 1222.09ms
 Max: 1304.72ms
 
+graphics surf - release
+Mean: 8.99847ms
+Min: 8.9578ms
+Max: 9.19185ms
+
+graphics surf - debug
+Mean: 1569.71ms
+Min: 1557.13ms
+Max: 1596.25ms
 
