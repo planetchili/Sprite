@@ -37,3 +37,13 @@ use data() instead of [] - Debug
 Mean: 751.056ms
 Min: 750.234ms
 Max: 752.219ms
+
+separate .cpps - Debug
+Mean: 414.824ms
+Min: 414.006ms
+Max: 415.346ms
+
+separeate .cpps - Release
+Mean: 8.84255ms
+Min: 8.82827ms
+Max: 8.85899ms
