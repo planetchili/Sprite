@@ -36,6 +36,10 @@ Game::Game( MainWindow& wnd )
 	{
 		positions.push_back( { xd( rng ),yd( rng ) } );
 	}
+
+	// move test
+	Surface donor( "Images\\link90x90.bmp" );
+	Surface recipient = std::move( donor );
 }
 
 void Game::Go()
