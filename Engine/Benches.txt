@@ -32,3 +32,8 @@ optimization in surface.cpp/debug - Debug
 Mean: 789.886ms
 Min: 789.482ms
 Max: 790.236ms
+
+use data() instead of [] - Debug
+Mean: 751.056ms
+Min: 750.234ms
+Max: 752.219ms
