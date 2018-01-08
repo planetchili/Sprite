@@ -72,6 +72,21 @@ Surface::Surface( int width,int height )
 	pixels( width * height )
 {}
 
+Surface::Surface( Surface&& donor )
+{
+	*this = std::move( donor );
+}
+
+Surface& Surface::operator=( Surface&& rhs )
+{
+	width = rhs.width;
+	height = rhs.height;
+	pixels = std::move( rhs.pixels );
+	rhs.width = 0;
+	rhs.height = 0;
+	return *this;
+}
+
 int Surface::GetWidth() const
 {
 	return width;
