@@ -27,3 +27,8 @@ Surface w/ std::vector - Debug
 Mean: 5091.78ms
 Min: 5088.49ms
 Max: 5098.18ms
+
+optimization in surface.cpp/debug - Debug
+Mean: 789.886ms
+Min: 789.482ms
+Max: 790.236ms
