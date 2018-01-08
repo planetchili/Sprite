@@ -41,8 +41,6 @@ namespace FramebufferShaders
 using Microsoft::WRL::ComPtr;
 
 Graphics::Graphics( HWNDKey& key )
-	:
-	sysBuffer( ScreenWidth,ScreenHeight )
 {
 	assert( key.hWnd != nullptr );
 
@@ -68,9 +66,9 @@ Graphics::Graphics( HWNDKey& key )
 	createFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 #endif
-	
+
 	// create device and front/back buffers
-	if( FAILED( hr = D3D11CreateDeviceAndSwapChain( 
+	if( FAILED( hr = D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -91,14 +89,14 @@ Graphics::Graphics( HWNDKey& key )
 	ComPtr<ID3D11Resource> pBackBuffer;
 	if( FAILED( hr = pSwapChain->GetBuffer(
 		0,
-		__uuidof( ID3D11Texture2D ),
+		__uuidof(ID3D11Texture2D),
 		(LPVOID*)&pBackBuffer ) ) )
 	{
 		throw CHILI_GFX_EXCEPTION( hr,L"Getting back buffer" );
 	}
 
 	// create a view on backbuffer that we can render to
-	if( FAILED( hr = pDevice->CreateRenderTargetView( 
+	if( FAILED( hr = pDevice->CreateRenderTargetView(
 		pBackBuffer.Get(),
 		nullptr,
 		&pRenderTargetView ) ) )
@@ -165,7 +163,7 @@ Graphics::Graphics( HWNDKey& key )
 	{
 		throw CHILI_GFX_EXCEPTION( hr,L"Creating pixel shader" );
 	}
-	
+
 
 	/////////////////////////////////////////////////
 	// create vertex shader for framebuffer
@@ -178,7 +176,7 @@ Graphics::Graphics( HWNDKey& key )
 	{
 		throw CHILI_GFX_EXCEPTION( hr,L"Creating vertex shader" );
 	}
-	
+
 
 	//////////////////////////////////////////////////////////////
 	// create and fill vertex buffer with quad for rendering frame
@@ -203,7 +201,7 @@ Graphics::Graphics( HWNDKey& key )
 		throw CHILI_GFX_EXCEPTION( hr,L"Creating vertex buffer" );
 	}
 
-	
+
 	//////////////////////////////////////////
 	// create input layout for fullscreen quad
 	const D3D11_INPUT_ELEMENT_DESC ied[] =
@@ -236,10 +234,20 @@ Graphics::Graphics( HWNDKey& key )
 	{
 		throw CHILI_GFX_EXCEPTION( hr,L"Creating sampler state" );
 	}
+
+	// allocate memory for sysbuffer (16-byte aligned for faster access)
+	pSysBuffer = reinterpret_cast<Color*>(
+		_aligned_malloc( sizeof( Color ) * Graphics::ScreenWidth * Graphics::ScreenHeight,16u ));
 }
 
 Graphics::~Graphics()
 {
+	// free sysbuffer memory (aligned free)
+	if( pSysBuffer )
+	{
+		_aligned_free( pSysBuffer );
+		pSysBuffer = nullptr;
+	}
 	// clear the state of the device context before destruction
 	if( pImmediateContext ) pImmediateContext->ClearState();
 }
@@ -260,14 +268,14 @@ void Graphics::EndFrame()
 		throw CHILI_GFX_EXCEPTION( hr,L"Mapping sysbuffer" );
 	}
 	// setup parameters for copy operation
-	Color* pDst = reinterpret_cast<Color*>(mappedSysBufferTexture.pData );
+	Color* pDst = reinterpret_cast<Color*>(mappedSysBufferTexture.pData);
 	const size_t dstPitch = mappedSysBufferTexture.RowPitch / sizeof( Color );
 	const size_t srcPitch = Graphics::ScreenWidth;
 	const size_t rowBytes = srcPitch * sizeof( Color );
 	// perform the copy line-by-line
 	for( size_t y = 0u; y < Graphics::ScreenHeight; y++ )
 	{
-		memcpy( &pDst[y * dstPitch],&sysBuffer.Data()[y * srcPitch],rowBytes );
+		memcpy( &pDst[y * dstPitch],&pSysBuffer[y * srcPitch],rowBytes );
 	}
 	// release the adapter memory
 	pImmediateContext->Unmap( pSysBufferTexture.Get(),0u );
@@ -316,11 +324,11 @@ std::wstring Graphics::Exception::GetFullMessage() const
 	return    (!errorName.empty() ? std::wstring( L"Error: " ) + errorName + L"\n"
 		: empty)
 		+ (!errorDesc.empty() ? std::wstring( L"Description: " ) + errorDesc + L"\n"
-			: empty)
+		: empty)
 		+ (!note.empty() ? std::wstring( L"Note: " ) + note + L"\n"
-			: empty)
+		: empty)
 		+ (!location.empty() ? std::wstring( L"Location: " ) + location
-			: empty);
+		: empty);
 }
 
 std::wstring Graphics::Exception::GetErrorName() const

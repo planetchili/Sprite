@@ -32,11 +32,13 @@ optimization in surface.cpp/debug - Debug
 Mean: 789.886ms
 Min: 789.482ms
 Max: 790.236ms
+Release => No change
 
 use data() instead of [] - Debug
 Mean: 751.056ms
 Min: 750.234ms
 Max: 752.219ms
+Release => No change
 
 separate .cpps - Debug
 Mean: 414.824ms
@@ -47,3 +49,9 @@ separeate .cpps - Release
 Mean: 8.84255ms
 Min: 8.82827ms
 Max: 8.85899ms
+
+Graphics w/o Surface - Release
+Mean: 6.42622ms
+Min: 6.42247ms
+Max: 6.43037ms
+Debug => no change
