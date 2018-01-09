@@ -55,3 +55,10 @@ Mean: 6.42622ms
 Min: 6.42247ms
 Max: 6.43037ms
 Debug => no change
+
+Extern template - Debug
+Mean: 54.2862ms
+Min: 54.201ms
+Max: 54.4076ms
+Release => no change
+

@@ -1,3 +1,4 @@
+#define GOD_GRAPHICS
 #include "Graphics.h"
 
 void Graphics::BeginFrame()
@@ -22,4 +23,9 @@ Color Graphics::GetPixel( int x,int y ) const
 	assert( y >= 0 );
 	assert( y < int( Graphics::ScreenHeight ) );
 	return pSysBuffer[Graphics::ScreenWidth * y + x];
+}
+
+void dummy( Graphics& gfx )
+{
+	gfx.DrawSprite( 0,0,RectI{ 0,0,0,0 },RectI{ 0,0,0,0 },Surface{},SpriteEffect::Copy{} );
 }

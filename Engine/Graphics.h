@@ -130,3 +130,10 @@ public:
 	static constexpr int ScreenHeight = 600;
 	static RectI GetScreenRect();
 };
+
+#include "SpriteEffect.h"
+
+#ifndef GOD_GRAPHICS
+extern template
+void Graphics::DrawSprite<SpriteEffect::Copy>( int x,int y,RectI srcRect,const RectI& clip,const Surface& s,SpriteEffect::Copy effect );
+#endif
