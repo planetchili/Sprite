@@ -74,6 +74,6 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	font.DrawText( "Becky.\nLemme smash.",wnd.mouse.GetPos() - Vei2{ 50,150 },Colors::White,gfx );
+	font.DrawText( "Fuck\nwill this work.",{ 200, 200 },Colors::White,gfx );
 	link.Draw( gfx );
 }
