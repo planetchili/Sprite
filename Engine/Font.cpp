@@ -14,15 +14,12 @@ Font::Font( const std::string& filename,Color chroma )
 	assert( glyphHeight * nRows == surface.GetHeight() );
 }
 
-void Font::DrawText( const std::string& text,const Vei2& pos,Color color,Graphics& gfx ) const
-{
+void Font::DrawText( const std::string& text,const Vei2& pos,Color color,Graphics& gfx ) const {
 	// curPos is the pos that we are drawing to on the screen
 	auto curPos = pos;
-	for( auto c : text )
-	{
+	for( auto c : text ) {
 		// on a newline character, reset x position and move down by 1 glyph height
-		if( c == '\n' )
-		{
+		if( c == '\n' ) {
 			// carriage return
 			curPos.x = pos.x;
 			// line feed
@@ -32,8 +29,7 @@ void Font::DrawText( const std::string& text,const Vei2& pos,Color color,Graphic
 		}
 		// only draw characters that are on the font sheet
 		// start at firstChar + 1 because might as well skip ' ' as well
-		else if( c >= firstChar + 1 && c <= lastChar )
-		{
+		else if( c >= firstChar + 1 && c <= lastChar ) {
 			// use DrawSpriteSubstitute so that we can choose the color of the font rendered
 			gfx.DrawSpriteSubstitute( curPos.x,curPos.y,color,MapGlyphRect( c ),surface,chroma );
 		}
@@ -42,8 +38,7 @@ void Font::DrawText( const std::string& text,const Vei2& pos,Color color,Graphic
 	}
 }
 
-RectI Font::MapGlyphRect( char c ) const
-{
+RectI Font::MapGlyphRect( char c ) const {
 	assert( c >= firstChar && c <= lastChar );
 	// font sheet glyphs start at ' ', calculate index into sheet
 	const int glyphIndex = c - ' ';

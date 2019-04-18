@@ -28,43 +28,35 @@ Game::Game( MainWindow& wnd )
 {
 }
 
-void Game::Go()
-{
+void Game::Go() {
 	gfx.BeginFrame();	
 	UpdateModel();
 	ComposeFrame();
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
-{
+void Game::UpdateModel() {
 	// process key messages while any remain
-	while( !wnd.kbd.KeyIsEmpty() )
-	{
+	while( !wnd.kbd.KeyIsEmpty() ) {
 		const auto e = wnd.kbd.ReadKey();
 		// only interested in space bar presses
-		if( e.IsPress() && e.GetCode() == VK_SPACE )
-		{
+		if( e.IsPress() && e.GetCode() == VK_SPACE ) {
 			link.ActivateEffect();
 			hit.Play();
 		}
 	}
 	// process arrow keys state
 	Vec2 dir = { 0.0f,0.0f };
-	if( wnd.kbd.KeyIsPressed( VK_UP ) )
-	{
+	if( wnd.kbd.KeyIsPressed( VK_UP ) ) {
 		dir.y -= 1.0f;
 	}
-	if( wnd.kbd.KeyIsPressed( VK_DOWN ) )
-	{
+	if( wnd.kbd.KeyIsPressed( VK_DOWN ) ) {
 		dir.y += 1.0f;
 	}
-	if( wnd.kbd.KeyIsPressed( VK_LEFT ) )
-	{
+	if( wnd.kbd.KeyIsPressed( VK_LEFT ) ) {
 		dir.x -= 1.0f;
 	}
-	if( wnd.kbd.KeyIsPressed( VK_RIGHT ) )
-	{
+	if( wnd.kbd.KeyIsPressed( VK_RIGHT ) ) {
 		dir.x += 1.0f;
 	}
 	link.SetDirection( dir );
@@ -72,8 +64,7 @@ void Game::UpdateModel()
 	link.Update( ft.Mark() );
 }
 
-void Game::ComposeFrame()
-{
+void Game::ComposeFrame() {
 	font.DrawText( "Fuck\nwill this work.",{ 200, 200 },Colors::White,gfx );
 	link.Draw( gfx );
 }

@@ -30,8 +30,7 @@
 #include "Font.h"
 #include "Sound.h"
 
-class Game
-{
+class Game {
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;

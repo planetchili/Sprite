@@ -3,11 +3,9 @@
 #include "Animation.h"
 #include "Vec2.h"
 
-class Character
-{
+class Character {
 private:
-	enum class Sequence
-	{
+	enum class Sequence {
 		WalkingLeft,
 		WalkingRight,
 		WalkingUp,

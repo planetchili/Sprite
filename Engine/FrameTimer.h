@@ -1,8 +1,7 @@
 #pragma once
 #include <chrono>
 
-class FrameTimer
-{
+class FrameTimer {
 public:
 	FrameTimer();
 	float Mark();
